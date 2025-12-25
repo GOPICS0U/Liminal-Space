@@ -1,7 +1,6 @@
-[gd_scene load_steps=24 format=3 uid="uid://b57uspbprxc8"]
+[gd_scene load_steps=25 format=3 uid="uid://b57uspbprxc8"]
 
 [ext_resource type="Script" uid="uid://bfwglegmb5rd3" path="res://scripts/world.gd" id="1_ho7yh"]
-[ext_resource type="PackedScene" uid="uid://bd3ai1v40ssao" path="res://map.tscn" id="3_fd0sg"]
 [ext_resource type="Script" uid="uid://db7kmc0dylueb" path="res://scripts/ui/fps_counter.gd" id="4_2328u"]
 [ext_resource type="Script" uid="uid://b8dpk5vhi06pi" path="res://scripts/ui/menu/host_button.gd" id="4_nuahp"]
 [ext_resource type="Shader" uid="uid://bpqwdxdcoqgkl" path="res://scripts/shaders/blur.gdshader" id="4_p7mxg"]
@@ -13,7 +12,7 @@
 [ext_resource type="Script" uid="uid://dcteuh8jcuba4" path="res://scripts/ui/menu/pause/resume.gd" id="7_5cdyw"]
 [ext_resource type="Script" uid="uid://bacuksdmu5e7o" path="res://scripts/ui/menu/options/controller_sensitivity.gd" id="7_jhf7u"]
 [ext_resource type="Script" uid="uid://dm4lm4o7e38y4" path="res://scripts/ui/menu/pause/quit.gd" id="9_ucmny"]
-[ext_resource type="PackedScene" uid="uid://dsvty312iomny" path="res://objet_interac.tscn" id="14_70uel"]
+[ext_resource type="PackedScene" uid="uid://dst32coq4otei" path="res://maps/metro.tscn" id="15_hiqwa"]
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_r06yd"]
 energy_multiplier = 1.25
@@ -79,6 +78,27 @@ shader_parameter/color_over = Color(0, 0, 0, 1)
 
 [sub_resource type="Theme" id="Theme_utqnk"]
 
+[sub_resource type="GDScript" id="GDScript_70uel"]
+script/source = "extends Area3D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+
+
+func _on_body_entered(body: Node3D) -> void:
+	print(body)
+"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_70uel"]
+size = Vector3(1, 6.0897217, 9.895752)
+
 [node name="World" type="Node"]
 script = ExtResource("1_ho7yh")
 
@@ -102,8 +122,6 @@ directional_shadow_max_distance = 99.3
 offset_right = 40.0
 offset_bottom = 23.0
 script = ExtResource("4_2328u")
-
-[node name="map" parent="." instance=ExtResource("3_fd0sg")]
 
 [node name="Menu" type="CanvasLayer" parent="."]
 
@@ -338,8 +356,16 @@ text = "Music"
 _spawnable_scenes = PackedStringArray("uid://b2qhxdrnviyqf")
 spawn_path = NodePath("..")
 
-[node name="StaticBody3D" parent="." instance=ExtResource("14_70uel")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9040942, 0.49999985, 0.47836155)
+[node name="Node3D" parent="." instance=ExtResource("15_hiqwa")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -14.543198)
+script = SubResource("GDScript_70uel")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5448608, 0.444458)
+shape = SubResource("BoxShape3D_70uel")
 
 [connection signal="toggled" from="Menu/Options/MarginContainer/VBoxContainer/FpsCounter" to="FpsCounter" method="_on_fps_counter_toggled"]
 [connection signal="toggled" from="Menu/Options/MarginContainer/VBoxContainer/Ping" to="FpsCounter" method="_on_ping_toggled"]
@@ -355,5 +381,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9040942, 0.49999985, 0.4783
 [connection signal="toggled" from="Menu/MainMenu/MarginContainer/VBoxContainer/OptionsButton" to="." method="_on_options_button_toggled"]
 [connection signal="toggled" from="Menu/MainMenu/MarginContainer/VBoxContainer/OptionsButton" to="Menu/Options/MarginContainer/VBoxContainer/Fullscreen" method="_on_options_button_toggled"]
 [connection signal="toggled" from="Menu/MainMenu/MusicToggle" to="." method="_on_music_toggle_toggled"]
-
-[editable path="map"]
+[connection signal="body_entered" from="Area3D" to="Area3D" method="_on_body_entered"]

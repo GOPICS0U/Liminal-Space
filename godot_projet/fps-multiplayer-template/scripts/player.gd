@@ -10,13 +10,7 @@ extends CharacterBody3D
 @export var health : int = 2
 ## The xyz position of the random spawns, you can add as many as you want!
 @export var spawns: PackedVector3Array = ([
-	Vector3(-18, 0.2, 0),
-	Vector3(18, 0.2, 0),
-	Vector3(-2.8, 0.2, -6),
-	Vector3(-17,0,17),
-	Vector3(17,0,17),
-	Vector3(17,0,-17),
-	Vector3(-17,0,-17)
+	Vector3(0, 1.5, 0),
 ])
 var sensitivity : float =  .005
 var controller_sensitivity : float =  .010
@@ -74,7 +68,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	if multiplayer.multiplayer_peer != null:
-		if not is_multiplayer_authority(): return
+			if not is_multiplayer_authority(): return
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
